@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from dependencies import get_token_header
+from functions import notes
 
 
 router = APIRouter(
@@ -11,20 +12,20 @@ router = APIRouter(
 
 @router.post('/')
 def create_note():
-    pass
+    return notes.create_note()
 
 @router.get('/{post_id}')
 def get_note(post_id: int):
-    pass
+    return notes.get_note(note_id)
 
 @router.get('/')
 def get_notes():
-    pass
+    return notes.get_notes()
 
 @router.put('/{post_id}')
 def update_note(post_id: int):
-    pass
+    return notes.update_note(note_id)
 
 @router.delete('/{post_id}')
 def delete_note(post_id: int):
-    pass
+    return notes.delete_note(note_id)
