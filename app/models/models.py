@@ -20,7 +20,7 @@ class Note(Base):
     id = Column(Integer, primary_key=True, index=True)
     titile = Column(String)
     body = Column(String)
-    active = Column(Boolean(default=True))
+    active = Column(Boolean(create_constraint=True))
     created = Column(DateTime(timezone=True))
     user_id = Column(Integer, ForeignKey('users.id'))
 

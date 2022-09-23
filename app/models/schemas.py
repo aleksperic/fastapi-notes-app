@@ -3,23 +3,26 @@ from pydantic import BaseModel
 
 class UserBase(BaseModel):
 
-    username: str
-    password: str
-    email: str
+    class Config():
+        orm_mode = True
 
-class UserCreate(UserBase):
+class UserShow(UserBase):
 
-    usename: str
-    password: str
-
-class User(UserBase):
-        
     id: int
     username: str
     email: str
+    
 
-    class Config():
-        orm_mode = True
+class User(UserBase):
+
+    username: str
+    password: str
+    email: str
+
+class UserUpdate(UserBase):
+    password: str
+    email: str
+
 
 
 class PostBase(BaseModel):
@@ -27,18 +30,17 @@ class PostBase(BaseModel):
     title: str
     body: str
 
+    class Config():
+        orm_mode = True
+
 class PostCreate(PostBase):
 
-    titile: str
-    body: str
     active: str
     create: str
 
 class Post(PostBase):
 
     id: int
-    title: str
     active: str
-
     class Config():
         orm_mode = True

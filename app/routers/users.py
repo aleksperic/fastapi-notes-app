@@ -1,31 +1,36 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from dependencies import get_token_header
 from functions import users
+from models import models, schemas
+from models.database import get_db
+from sqlalchemy.orm import Session
+from typing import List
 
 
 router = APIRouter(
     prefix='/users',
     tags=['Users'],
-    dependencies=[Depends(get_token_header)],
+    # dependencies=[Depends(get_token_header)],
     responses={404: {'description':'Not found'}}
     )
 
-@router.post('/')
-def create_user():
-    return users.create_user()
 
-@router.get('/{user_id}')
-def get_user(post_id: int):
-    return users.get_user(post_id)
+@router.post('/', response_model=schemas.UserShow, status_code=status.HTTP_201_CREATED)
+def create_user(username: str, password: str, email: str, db: Session = Depends(get_db)):
+    return users.create_user(username,password, email, db)
 
-@router.get('/')
-def get_users():
-    return users.get_users()
+@router.get('/{username}', response_model=schemas.UserShow, status_code=status.HTTP_200_OK)
+def get_user(username: str, db: Session = Depends(get_db)):
+    return users.get_user(username, db)
 
-@router.put('/{user_id}')
-def update_user(post_id: int):
-    return users.update_user(post_id)
+@router.get('/', response_model=List[schemas.UserShow], status_code=status.HTTP_200_OK)
+def get_users(db: Session = Depends(get_db)):
+    return users.get_users(db)
 
-@router.delete('/{user_id}')
-def delete_user(post_id: int):
-    return users.delete_user(post_id)
+@router.put('/{username}', response_model=schemas.UserShow, status_code=status.HTTP_202_ACCEPTED)
+def update_user(username: str, request: schemas.UserUpdate, db: Session = Depends(get_db)):
+    return users.update_user(username, request, db)
+
+@router.delete('/{username}', status_code=status.HTTP_410_GONE)
+def delete_user(username: str, db: Session = Depends(get_db)):
+    return users.delete_user(username, db)
