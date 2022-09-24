@@ -26,7 +26,6 @@ def update_user(username, request, db):
     db.commit()
     return f'User {username} updated!'
 
-
 def delete_user(username, db):
     user = db.query(models.User).filter(models.User.username == username)
     if not user.first():
