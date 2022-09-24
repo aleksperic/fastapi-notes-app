@@ -17,14 +17,14 @@ def get_user(username, db):
 def get_users(db):
     users = db.query(models.User).all()
     return users
-    
+
 def update_user(username, request, db):
     user = db.query(models.User).filter(models.User.username == username)
     if not user.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'User {username} not found')
     user.update({'password': request.password, 'email': request.email}, synchronize_session=False)
     db.commit()
-    return user.first()
+    return f'User {username} updated!'
 
 
 def delete_user(username, db):

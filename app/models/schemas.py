@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class UserBase(BaseModel):
@@ -22,7 +22,6 @@ class User(UserBase):
 class UserUpdate(UserBase):
     password: str
     email: str
-
 
 
 class PostBase(BaseModel):

@@ -27,7 +27,7 @@ def get_user(username: str, db: Session = Depends(get_db)):
 def get_users(db: Session = Depends(get_db)):
     return users.get_users(db)
 
-@router.put('/{username}', response_model=schemas.UserShow, status_code=status.HTTP_202_ACCEPTED)
+@router.put('/{username}', status_code=status.HTTP_202_ACCEPTED)
 def update_user(username: str, request: schemas.UserUpdate, db: Session = Depends(get_db)):
     return users.update_user(username, request, db)
 
