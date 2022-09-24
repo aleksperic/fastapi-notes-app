@@ -24,7 +24,7 @@ class UserUpdate(UserBase):
     email: str
 
 
-class PostBase(BaseModel):
+class NoteBase(BaseModel):
     
     title: str
     body: str
@@ -32,14 +32,12 @@ class PostBase(BaseModel):
     class Config():
         orm_mode = True
 
-class PostCreate(PostBase):
+class NoteShow(NoteBase):
 
     active: str
     create: str
 
-class Post(PostBase):
+class Note(NoteBase):
 
     id: int
     active: str
-    class Config():
-        orm_mode = True
