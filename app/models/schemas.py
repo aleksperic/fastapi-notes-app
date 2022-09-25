@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 
 class UserBase(BaseModel):
@@ -25,19 +26,25 @@ class UserUpdate(UserBase):
 
 
 class NoteBase(BaseModel):
-    
-    title: str
-    body: str
 
     class Config():
         orm_mode = True
 
 class NoteShow(NoteBase):
 
-    active: str
-    create: str
+    id: int
+    title: str
+    body: str
+    created: datetime
+    active: bool
+    user_id: int
 
 class Note(NoteBase):
 
-    id: int
-    active: str
+    created: datetime
+    active: bool = True
+
+class NoteUpdate(NoteBase):
+    title: str
+    body: str = Field(title="The description of the item", max_length=300)
+    created: datetime

@@ -18,10 +18,10 @@ class Note(Base):
     __tablename__ = 'posts'
 
     id = Column(Integer, primary_key=True, index=True)
-    titile = Column(String)
+    title = Column(String)
     body = Column(String)
     active = Column(Boolean(create_constraint=True))
-    created = Column(DateTime(timezone=True))
+    created = Column(String)
     user_id = Column(Integer, ForeignKey('users.id'))
 
     users = relationship('User', back_populates='posts')
