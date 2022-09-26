@@ -11,11 +11,11 @@ class User(Base):
     password = Column(String)
     email = Column(String)
 
-    posts = relationship('Note', back_populates='users')
+    notes = relationship('Note', back_populates='users')
 
 class Note(Base):
 
-    __tablename__ = 'posts'
+    __tablename__ = 'notes'
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
@@ -24,4 +24,4 @@ class Note(Base):
     created = Column(String)
     user_id = Column(Integer, ForeignKey('users.id'))
 
-    users = relationship('User', back_populates='posts')
+    users = relationship('User', back_populates='notes')

@@ -1,8 +1,8 @@
 from models import models, schemas, database
 from fastapi import HTTPException, status
 
-def create_user(username, password, email, db):
-    new_user = models.User(username=username, password=password, email=email)
+def create_user(user, db):
+    new_user = models.User(username=user.username, password=user.password, email=user.email)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
