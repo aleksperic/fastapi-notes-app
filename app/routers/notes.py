@@ -19,7 +19,7 @@ router = APIRouter(
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @router.post('/', response_model=schemas.NoteShow, status_code=status.HTTP_201_CREATED)
-def create_note(request: schemas.Note, user_id: int = Path(example='Enter user ID'), title: str = Query(example='Your title here', description='Title', max_length=50), db: Session = Depends(get_db)):
+def create_note(request: schemas.Note, user_id: int = Query(description="User ID"), title: str = Query(description='Title', max_length=50), db: Session = Depends(get_db)):
     return notes.create_note(request, user_id, title, db)
 
 @router.get('/{id}', response_model=schemas.NoteShow, status_code=status.HTTP_200_OK)
