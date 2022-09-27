@@ -11,13 +11,13 @@ router = APIRouter(
     prefix='/users',
     tags=['Users'],
     # dependencies=[Depends(get_token_header)],
-    responses={404: {'description':'Not found'}}
+    responses={404: {'description': 'Not found'}}
     )
 
 
 @router.post('/', response_model=schemas.UserShow, status_code=status.HTTP_201_CREATED)
-def create_user(user: schemas.User, db: Session = Depends(get_db)):
-    return users.create_user(user, db)
+def create_user(request: schemas.User, db: Session = Depends(get_db)):
+    return users.create_user(request, db)
 
 @router.get('/{username}', response_model=schemas.UserShow, status_code=status.HTTP_200_OK)
 def get_user(username: str, db: Session = Depends(get_db)):

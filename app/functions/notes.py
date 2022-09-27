@@ -1,8 +1,8 @@
 from models import models, schemas, database
 from fastapi import HTTPException, status
 
-def create_note(request, user_id, title, body, db):
-    new_note = models.Note(user_id=user_id, title=title, body=body, active=request.active, created=request.created)
+def create_note(request, user_id, title, db):
+    new_note = models.Note(user_id=user_id, title=title, body=request.body, active=request.active, created=request.created)
     db.add(new_note)
     db.commit()
     db.refresh(new_note)
