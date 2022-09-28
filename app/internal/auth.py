@@ -28,10 +28,10 @@ CREDENTIALS_EXCEPTION = HTTPException(
         headers={"WWW-Authenticate": "Bearer"},
     )
 
-def hash_password(password: str) -> str:
+def hash_password(password: str):
     return pwd_context.hash(password)
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
+def verify_password(plain_password: str, hashed_password: str):
     return pwd_context.verify(plain_password, hashed_password)
 
 def get_user_from_db(username: str, db: Session):
@@ -43,9 +43,9 @@ def get_user_from_db(username: str, db: Session):
 def authenticate_user(username: str, password: str, db: Session):
     user = db.query(models.User).filter(models.User.username == username).first()
     if user is None:
-        return False
+        raise CREDENTIALS_EXCEPTION
     if not verify_password(password, user.password):
-        return False
+        raise CREDENTIALS_EXCEPTION
     return user
 
 def create_access_token(data: dict, expires_delta: timedelta):

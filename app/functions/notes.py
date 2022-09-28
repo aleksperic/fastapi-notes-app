@@ -14,9 +14,9 @@ def get_note(id, db):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'Note {id} not found')
     return note
     
-def get_notes(db):
-    notes = db.query(models.Note).all()
-    return notes
+def get_notes(db, user):
+    notes = db.query(models.Note).filter(models.Note.user_id == user.id)
+    return list(notes)
 
 def update_note(id, active, request, db):
     note = db.query(models.Note).filter(models.Note.id == id)

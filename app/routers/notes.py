@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, status, Query, Path
 from fastapi.security import OAuth2PasswordBearer
 from dependencies import get_token_header
 from functions import notes
+from internal import auth
 from models import models, schemas
 from models.database import get_db
 from sqlalchemy.orm import Session
@@ -27,8 +28,8 @@ def get_note(id: int, db: Session = Depends(get_db)):
     return notes.get_note(id, db)
 
 @router.get('/', response_model=List[schemas.NoteShow], status_code=status.HTTP_200_OK)
-def get_notes(db: Session = Depends(get_db)):
-    return notes.get_notes(db)
+def get_notes(db: Session = Depends(get_db), current_user: schemas.UserShow = Depends(auth.get_current_user)):
+    return notes.get_notes(db, current_user)
 
 @router.put('/{id}', status_code=status.HTTP_202_ACCEPTED)
 def update_note(id: int, active: bool, request: schemas.NoteUpdate, db: Session = Depends(get_db)):

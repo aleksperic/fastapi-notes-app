@@ -38,5 +38,4 @@ def delete_user(username: str, db: Session = Depends(get_db)):
 
 @router.get('/me', response_model=schemas.UserShow, status_code=status.HTTP_200_OK)
 def my_info(current_user: schemas.UserShow = Depends(auth.get_current_user)):
-    print(current_user)
     return current_user
