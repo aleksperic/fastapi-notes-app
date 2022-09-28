@@ -20,9 +20,9 @@ router = APIRouter(
 def create_user(request: schemas.User, db: Session = Depends(get_db)):
     return users.create_user(request, db)
 
-@router.get('/{username}', response_model=schemas.UserShow, status_code=status.HTTP_200_OK)
-def get_user(username: str, db: Session = Depends(get_db)):
-    return users.get_user(username, db)
+# @router.get('/{username}', response_model=schemas.UserShow, status_code=status.HTTP_200_OK)
+# def get_user(username: str, db: Session = Depends(get_db)):
+#     return users.get_user(username, db)
 
 @router.get('/', response_model=List[schemas.UserShow], status_code=status.HTTP_200_OK)
 def get_users(db: Session = Depends(get_db)):
@@ -37,5 +37,6 @@ def delete_user(username: str, db: Session = Depends(get_db)):
     return users.delete_user(username, db)
 
 @router.get('/me', response_model=schemas.UserShow, status_code=status.HTTP_200_OK)
-def my_info(current_user: schemas.UserShow = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+def my_info(current_user: schemas.UserShow = Depends(auth.get_current_user)):
+    print(current_user)
     return current_user

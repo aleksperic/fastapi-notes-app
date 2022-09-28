@@ -34,9 +34,9 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
-def get_user_from_db(username: str, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.username == username)
-    if not user.first():
+def get_user_from_db(username: str, db: Session):
+    user = db.query(models.User).filter(models.User.username == username).first()
+    if not user:
         return False
     return user
 
@@ -61,10 +61,10 @@ def get_current_user(token: str = Depends(oauth2_schema), db: Session = Depends(
         username: str = payload.get('sub')
         if username is None:
             raise CREDENTIALS_EXCEPTION
-        token_data = TokenData(username=username)
+        token_data = schemas.TokenData(username=username)
     except JWTError:
         raise CREDENTIALS_EXCEPTION
-    user = get_user_from_db(usename=token_data.username)
+    user = get_user_from_db(token_data.username, db)
     if not user:
         raise CREDENTIALS_EXCEPTION
     return user
