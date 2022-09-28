@@ -1,17 +1,19 @@
-
 from models import models, schemas
 from models.database import get_db
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
+from environs import Env
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi import status, HTTPException, Depends, APIRouter
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 
-SECRET_KEY = 'a6d46f18f2e0db5de81fb6163cb492b8f2ac0bdaf38a7ac7ec8a769ae3c17546'
-ALGORITHM = 'HS256'
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+env = Env()
+env.read_env()
+SECRET_KEY = env.str('SECRET_KEY')
+ALGORITHM = env.str('ALGORITHM')
+ACCESS_TOKEN_EXPIRE_MINUTES = env.int('ACCESS_TOKEN_EXPIRE_MINUTES')
 
 router = APIRouter(
     prefix='',
