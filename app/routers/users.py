@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, status
 from dependencies import get_token_header
+from internal import auth
 from functions import users
 from models import models, schemas
 from models.database import get_db
@@ -34,3 +35,7 @@ def update_user(username: str, request: schemas.UserUpdate, db: Session = Depend
 @router.delete('/{username}', status_code=status.HTTP_410_GONE)
 def delete_user(username: str, db: Session = Depends(get_db)):
     return users.delete_user(username, db)
+
+@router.get('/me', response_model=schemas.UserShow, status_code=status.HTTP_200_OK)
+def my_info(current_user: schemas.UserShow = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    return current_user

@@ -1,8 +1,12 @@
 from models import models, schemas, database
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status,Depends
+from sqlalchemy.orm import Session
+from internal import auth
+
 
 def create_user(request, db):
-    new_user = models.User(username=request.username, password=request.password, email=request.email)
+    password_hash = auth.hash_password(request.password)
+    new_user = models.User(username=request.username, password=password_hash, email=request.email)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -22,7 +26,7 @@ def update_user(username, request, db):
     user = db.query(models.User).filter(models.User.username == username)
     if not user.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'User {username} not found')
-    user.update({'password': request.password, 'email': request.email}, synchronize_session=False)
+    user.update({'email': request.email}, synchronize_session=False)
     db.commit()
     return f'User {username} updated!'
 
@@ -33,3 +37,4 @@ def delete_user(username, db):
     user.delete(synchronize_session=False)
     db.commit()
     return f'User - {username} deleted!'
+
