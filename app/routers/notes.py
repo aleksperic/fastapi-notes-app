@@ -31,6 +31,10 @@ def get_note(id: int, db: Session = Depends(get_db)):
 def get_notes(db: Session = Depends(get_db), current_user: schemas.UserShow = Depends(auth.get_current_user)):
     return notes.get_notes(db, current_user)
 
+@router.get('/', response_model=List[schemas.NoteShow], status_code=status.HTTP_200_OK)
+def get_public_notes(username: str, db: Session = Depends(get_db)):
+    return notes.get_public_notes(username, db)
+
 @router.put('/{id}', status_code=status.HTTP_202_ACCEPTED)
 def update_note(id: int, active: bool, request: schemas.NoteUpdate, db: Session = Depends(get_db)):
     return notes.update_note(id, active, request, db)

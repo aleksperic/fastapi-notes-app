@@ -29,7 +29,8 @@ class NoteShow(NoteBase):
     title: str
     body: str
     created: datetime
-    active: bool
+    active: bool = True
+    public: bool = False
     user_id: int
 
 class Note(NoteBase):
@@ -37,6 +38,7 @@ class Note(NoteBase):
     body: str | None = Field(title="The description of the note", default=None, max_length=300)
     created: datetime
     active: bool = True
+    public: bool = False
 
 class NoteUpdate(NoteBase):
     title: str

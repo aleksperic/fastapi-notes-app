@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Query
 from dependencies import get_token_header
 from internal import auth
 from functions import users
@@ -15,14 +15,17 @@ router = APIRouter(
     responses={404: {'description': 'Not found'}}
     )
 
+@router.get('/me', response_model=schemas.UserShow, status_code=status.HTTP_200_OK)
+def my_info(current_user: schemas.UserShow = Depends(auth.get_current_user)):
+    return current_user
 
 @router.post('/', response_model=schemas.UserShow, status_code=status.HTTP_201_CREATED)
 def create_user(request: schemas.User, db: Session = Depends(get_db)):
     return users.create_user(request, db)
 
-# @router.get('/{username}', response_model=schemas.UserShow, status_code=status.HTTP_200_OK)
-# def get_user(username: str, db: Session = Depends(get_db)):
-#     return users.get_user(username, db)
+@router.get('/{username}', response_model=schemas.UserShow, status_code=status.HTTP_200_OK)
+def get_user(username: str = Query(pattern='usename'), db: Session = Depends(get_db)):
+    return users.get_user(username, db)
 
 @router.get('/', response_model=List[schemas.UserShow], status_code=status.HTTP_200_OK)
 def get_users(db: Session = Depends(get_db)):
@@ -35,7 +38,3 @@ def update_user(username: str, request: schemas.UserUpdate, db: Session = Depend
 @router.delete('/{username}', status_code=status.HTTP_410_GONE)
 def delete_user(username: str, db: Session = Depends(get_db)):
     return users.delete_user(username, db)
-
-@router.get('/me', response_model=schemas.UserShow, status_code=status.HTTP_200_OK)
-def my_info(current_user: schemas.UserShow = Depends(auth.get_current_user)):
-    return current_user
