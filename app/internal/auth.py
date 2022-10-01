@@ -22,7 +22,7 @@ router = APIRouter(
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
-oauth2_schema = OAuth2PasswordBearer(tokenUrl='token')
+oauth2_schema = OAuth2PasswordBearer(tokenUrl='login')
 
 CREDENTIALS_EXCEPTION = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -71,7 +71,7 @@ def get_current_user(token: str = Depends(oauth2_schema), db: Session = Depends(
         raise CREDENTIALS_EXCEPTION
     return user
 
-@router.post('/token', response_model=schemas.Token)
+@router.post('/login', response_model=schemas.Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = authenticate_user(form_data.username, form_data.password, db)
     if user is None:
