@@ -37,4 +37,3 @@ def delete_user(username, db):
     user.delete(synchronize_session=False)
     db.commit()
     return f'User - {username} deleted!'
-

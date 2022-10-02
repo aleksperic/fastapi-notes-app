@@ -35,6 +35,7 @@ class NoteShow(NoteBase):
 
 class Note(NoteBase):
 
+    title: str = Field(title="The title of the note", max_length=100)
     body: str | None = Field(title="The description of the note", default=None, max_length=300)
     created: datetime
     active: bool = True
