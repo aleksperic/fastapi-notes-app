@@ -45,6 +45,7 @@ class NoteUpdate(NoteBase):
     title: str
     body: str = Field(title="The description of the note", max_length=300)
     created: datetime
+    active: bool = True
 
 class UserShow(UserBase):
 
@@ -54,6 +55,10 @@ class UserShow(UserBase):
     notes: List[NoteShow] | None
     class Config():
         orm_mode=True
+
+class UserPublicNotes(UserBase):
+    username: str
+    notes: List[NoteShow] | None
 
 class Token(BaseModel):
     access_token: str
