@@ -1,8 +1,7 @@
-from fastapi import FastAPI, APIRouter, Depends
+from fastapi import FastAPI
 from routers import notes, users
 from internal import admin, auth
 from models.database import Base, engine
-from dependencies import get_query_token, get_token_header
 
 
 app = FastAPI()
