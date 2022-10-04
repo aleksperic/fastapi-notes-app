@@ -1,40 +1,28 @@
-from fastapi import APIRouter, Depends, status, Query
-from dependencies import get_token_header
-from internal import auth
+from fastapi import APIRouter, Depends, status
+from internal.auth import authenticate_user, create_access_token, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES
 from functions import users
-from models import models, schemas
+from models import schemas
 from models.database import get_db
 from sqlalchemy.orm import Session
-from typing import List
-
+from fastapi.security import OAuth2PasswordRequestForm
 
 router = APIRouter(
-    prefix='/users',
     tags=['Users'],
-    # dependencies=[Depends(get_token_header)],
     responses={404: {'description': 'Not found'}}
     )
 
 @router.get('/me', response_model=schemas.UserShow, status_code=status.HTTP_200_OK)
-def my_info(current_user: schemas.UserShow = Depends(auth.get_current_user)):
+def my_info(current_user: schemas.UserShow = Depends(get_current_user)):
     return current_user
 
-@router.post('/', response_model=schemas.UserShow, status_code=status.HTTP_201_CREATED)
-def create_user(request: schemas.User, db: Session = Depends(get_db)):
-    return users.create_user(request, db)
+@router.post('/sign_up', response_model=schemas.UserShow, status_code=status.HTTP_201_CREATED)
+def sign_up(request: schemas.User, db: Session = Depends(get_db)):
+    return users.sign_up(request, db)
 
-@router.get('/{username}', response_model=schemas.UserShow, status_code=status.HTTP_200_OK)
-def get_user(username: str = Query(pattern='usename'), db: Session = Depends(get_db)):
-    return users.get_user(username, db)
-
-@router.get('/', response_model=List[schemas.UserShow], status_code=status.HTTP_200_OK)
-def get_users(db: Session = Depends(get_db)):
-    return users.get_users(db)
-
-@router.put('/{username}', status_code=status.HTTP_202_ACCEPTED)
-def update_user(username: str, request: schemas.UserUpdate, db: Session = Depends(get_db)):
-    return users.update_user(username, request, db)
-
-@router.delete('/{username}', status_code=status.HTTP_410_GONE)
-def delete_user(username: str, db: Session = Depends(get_db)):
-    return users.delete_user(username, db)
+@router.post('/login', response_model=schemas.Token)
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = authenticate_user(form_data.username, form_data.password, db)
+    if user is None:
+        raise CREDENTIALS_EXCEPTION
+    access_token = create_access_token({'sub': user.username}, ACCESS_TOKEN_EXPIRE_MINUTES)
+    return {'access_token': access_token, 'token_type': 'bearer'}

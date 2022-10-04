@@ -1,11 +1,10 @@
-from models import models, schemas, database
-from fastapi import HTTPException, status,Depends
-from sqlalchemy.orm import Session
-from internal import auth
+from models import models
+from fastapi import HTTPException, status
+from internal.auth import hash_password
 
 
-def create_user(request, db):
-    password_hash = auth.hash_password(request.password)
+def sign_up(request, db):
+    password_hash = hash_password(request.password)
     new_user = models.User(username=request.username, password=password_hash, email=request.email)
     db.add(new_user)
     db.commit()

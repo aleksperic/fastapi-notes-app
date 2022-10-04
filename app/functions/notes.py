@@ -1,4 +1,4 @@
-from models import models, schemas, database
+from models import models
 from fastapi import HTTPException, status
 
 

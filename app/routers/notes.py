@@ -1,13 +1,10 @@
 from fastapi import APIRouter, Depends, status
-from fastapi.security import OAuth2PasswordBearer
-from dependencies import get_token_header
 from functions import notes
 from internal import auth
-from models import models, schemas
+from models import schemas
 from models.database import get_db
 from sqlalchemy.orm import Session
 from typing import List
-from datetime import datetime
 
 
 router = APIRouter(
@@ -15,8 +12,6 @@ router = APIRouter(
         tags=['Notes'],
         responses={404: {'description': 'Not found'}}
         )
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 @router.get('/public', response_model=List[schemas.NoteShow], status_code=status.HTTP_200_OK)
