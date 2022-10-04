@@ -72,9 +72,9 @@ def get_current_user(token: str = Depends(oauth2_schema), db: Session = Depends(
     return user
 
 # @router.post('/login', response_model=schemas.Token)
-# def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-#     user = authenticate_user(form_data.username, form_data.password, db)
-#     if user is None:
-#         raise CREDENTIALS_EXCEPTION
-#     access_token = create_access_token({'sub': user.username}, ACCESS_TOKEN_EXPIRE_MINUTES)
-#     return {'access_token': access_token, 'token_type': 'bearer'}
+def login_auth(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = authenticate_user(form_data.username, form_data.password, db)
+    if user is None:
+        raise CREDENTIALS_EXCEPTION
+    access_token = create_access_token({'sub': user.username}, ACCESS_TOKEN_EXPIRE_MINUTES)
+    return {'access_token': access_token, 'token_type': 'bearer'}

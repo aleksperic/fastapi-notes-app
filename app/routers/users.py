@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status
-from internal.auth import authenticate_user, create_access_token, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES
+from internal.auth import get_current_user, login_auth
 from functions import users
 from models import schemas
 from models.database import get_db
@@ -21,8 +21,4 @@ def sign_up(request: schemas.User, db: Session = Depends(get_db)):
 
 @router.post('/login', response_model=schemas.Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = authenticate_user(form_data.username, form_data.password, db)
-    if user is None:
-        raise CREDENTIALS_EXCEPTION
-    access_token = create_access_token({'sub': user.username}, ACCESS_TOKEN_EXPIRE_MINUTES)
-    return {'access_token': access_token, 'token_type': 'bearer'}
+    return login_auth(form_data, db)
