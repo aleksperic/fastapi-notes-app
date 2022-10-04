@@ -53,8 +53,6 @@ class UserShow(UserBase):
     username: str
     email: EmailStr
     notes: List[NoteShow] | None
-    class Config():
-        orm_mode=True
 
 class Token(BaseModel):
     access_token: str
