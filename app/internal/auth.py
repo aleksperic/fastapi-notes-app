@@ -16,9 +16,9 @@ ALGORITHM = env.str('ALGORITHM')
 ACCESS_TOKEN_EXPIRE_MINUTES = env.int('ACCESS_TOKEN_EXPIRE_MINUTES')
 
 router = APIRouter(
-    prefix='',
-    tags=['Authentifications']
-)
+        prefix='',
+        tags=['Authentifications']
+        )
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
@@ -28,7 +28,7 @@ CREDENTIALS_EXCEPTION = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
-    )
+        )
 
 def hash_password(password: str):
     return pwd_context.hash(password)

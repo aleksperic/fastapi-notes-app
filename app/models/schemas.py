@@ -56,10 +56,6 @@ class UserShow(UserBase):
     class Config():
         orm_mode=True
 
-class UserPublicNotes(UserBase):
-    username: str
-    notes: List[NoteShow] | None
-
 class Token(BaseModel):
     access_token: str
     token_type: str
